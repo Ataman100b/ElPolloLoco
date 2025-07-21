@@ -21,6 +21,13 @@ let keyboard = new Keyboard();
  */
 function init() {
     canvas = document.getElementById('canvas');
+    
+    // Ensure canvas exists before creating world
+    if (!canvas) {
+        console.error('Canvas element not found!');
+        return;
+    }
+    
     world = new World(canvas, keyboard);
     responsiveControl();
 }
@@ -90,5 +97,15 @@ function setupKeyboardControls() {
     });
 }
 
-
-
+/**
+ * Starts the game with a small delay to ensure DOM is fully loaded
+ * This helps prevent initialization errors on slower connections like GitHub Pages
+ */
+function startGameWithDelay() {
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+        initLevel();
+        init();
+        startGame();
+    }, 100);
+}
