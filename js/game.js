@@ -149,7 +149,7 @@ function startGameWithDelay() {
                 window.debugGameFlow.log('Starting initializeGame after delay');
             }
             initializeGame();
-        }, 1000); // Increased from 500ms to 1000ms
+        }, 5000); // Increased from 500ms to 1000ms
     });
 }
 
