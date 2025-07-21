@@ -13,7 +13,6 @@ class CharacterMovement {
      */
     constructor(character) {
         this.character = character;
-        // Don't start movement immediately, wait for world to be set
     }
 
     /**

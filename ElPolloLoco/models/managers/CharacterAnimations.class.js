@@ -49,7 +49,6 @@ class CharacterAnimations {
      */
     constructor(character) {
         this.character = character;
-        // Don't start animations immediately, wait for world to be set
     }
 
     /**
