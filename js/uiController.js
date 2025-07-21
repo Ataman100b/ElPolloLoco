@@ -60,58 +60,82 @@ function showGame() {
   let canvas = document.getElementById('canvas');
   let startScreen = document.getElementById('first-screen');
   let gameNav = document.getElementById('game-nav');
+  let canvasContainer = document.getElementById('canvas-cont');
   
   console.log('🎨 showGame() - Elements check:', {
     canvas: canvas ? '✅ found' : '❌ NOT FOUND',
     startScreen: startScreen ? '✅ found' : '❌ NOT FOUND',
-    gameNav: gameNav ? '✅ found' : '❌ NOT FOUND'
+    gameNav: gameNav ? '✅ found' : '❌ NOT FOUND',
+    canvasContainer: canvasContainer ? '✅ found' : '❌ NOT FOUND'
   });
+  
+  // AGGRESSIVE CANVAS CREATION - Force create canvas if missing
+  if (!canvas && canvasContainer) {
+    console.log('🔧 FORCE CREATING canvas - original is missing!');
+    
+    canvas = document.createElement('canvas');
+    canvas.id = 'canvas';
+    canvas.width = 720;
+    canvas.height = 480;
+    
+    // Clear the container and add our canvas first
+    while (canvasContainer.firstChild) {
+      const child = canvasContainer.firstChild;
+      if (child.tagName !== 'CANVAS') {
+        break; // Stop if we hit a non-canvas element
+      }
+      canvasContainer.removeChild(child);
+    }
+    
+    // Insert as first child
+    canvasContainer.insertBefore(canvas, canvasContainer.firstChild);
+    
+    console.log('✅ FORCE CREATED canvas and inserted into container');
+  }
   
   // If original canvas exists, use it!
   if (canvas) {
-    console.log('✅ Original canvas found! Using the HTML canvas');
+    console.log('✅ Canvas found! Making it visible and functional');
+    
+    // Remove d-none class and make fully visible
     canvas.classList.remove('d-none');
     canvas.style.cssText = `
       display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
       width: 720px !important;
       height: 480px !important;
-      background: #87CEEB;
-      border: 3px solid #ff6b6b;
-      margin: 20px auto;
-      border-radius: 10px;
+      max-width: 720px !important;
+      max-height: 480px !important;
+      background: #87CEEB !important;
+      border: 3px solid #ff6b6b !important;
+      margin: 20px auto !important;
+      border-radius: 10px !important;
+      position: relative !important;
+      z-index: 100 !important;
     `;
     
-    // Store reference to the original canvas
+    // Store reference globally
     window.canvas = canvas;
     window.visibleCanvas = canvas;
+    window.originalCanvas = canvas;
     
-    console.log('✅ Original canvas configured and made visible');
+    console.log('✅ Canvas configured and stored globally');
+    
+    // Test canvas immediately
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(10, 10, 100, 50);
+    ctx.fillStyle = '#000';
+    ctx.font = '16px Arial';
+    ctx.fillText('CANVAS WORKS!', 15, 35);
+    
+    console.log('✅ Canvas test drawn - should be visible now!');
+    
   } else {
-    // Only create a new canvas if the original doesn't exist
-    console.log('⚠️ Original canvas not found, this shouldn\'t happen');
-    console.log('🔍 Searching more thoroughly...');
-    
-    // Wait a bit and try again
-    setTimeout(() => {
-      canvas = document.getElementById('canvas');
-      if (canvas) {
-        console.log('✅ Found canvas after delay!');
-        canvas.classList.remove('d-none');
-        canvas.style.cssText = `
-          display: block !important;
-          width: 720px !important;
-          height: 480px !important;
-          background: #87CEEB;
-          border: 3px solid #ff6b6b;
-          margin: 20px auto;
-          border-radius: 10px;
-        `;
-        window.canvas = canvas;
-        window.visibleCanvas = canvas;
-      } else {
-        console.error('❌ Canvas still not found even after delay');
-      }
-    }, 100);
+    console.error('❌ CRITICAL: Could not create or find any canvas element!');
+    console.log('🔍 Container contents:', canvasContainer ? canvasContainer.innerHTML : 'No container');
+    return;
   }
   
   if (!startScreen || !gameNav) {
@@ -121,7 +145,7 @@ function showGame() {
   
   startScreen.classList.add('d-none');
   gameNav.classList.remove('d-none');
-  console.log('🎮 Using ORIGINAL canvas approach - no overlay needed!');
+  console.log('🎮 AGGRESSIVE CANVAS SOLUTION: Canvas should be visible with test drawing!');
 }
 
 /**
