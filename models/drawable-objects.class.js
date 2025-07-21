@@ -61,11 +61,29 @@ class DrawableObjects {
         if (this.img && this.img.complete && this.img.naturalWidth > 0) {
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
         } else {
-            // Draw a placeholder while image loads
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            // Log image loading issues for debugging
+            if (!this.imageLoadingLogged) {
+                console.log('🖼️ Image not ready:', {
+                    hasImg: !!this.img,
+                    complete: this.img ? this.img.complete : 'no img',
+                    naturalWidth: this.img ? this.img.naturalWidth : 'no img',
+                    src: this.img ? this.img.src : 'no img',
+                    className: this.constructor.name
+                });
+                this.imageLoadingLogged = true; // Only log once per object
+            }
+            
+            // Draw a visible placeholder while image loads
+            ctx.fillStyle = 'rgba(255, 100, 100, 0.7)'; // Red placeholder
             ctx.fillRect(this.x, this.y, this.width, this.height);
             ctx.strokeStyle = '#FF0000';
+            ctx.lineWidth = 2;
             ctx.strokeRect(this.x, this.y, this.width, this.height);
+            
+            // Add text label
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '12px Arial';
+            ctx.fillText(this.constructor.name, this.x + 5, this.y + 15);
         }
     }
 
