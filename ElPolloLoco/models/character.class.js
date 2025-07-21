@@ -178,10 +178,16 @@ class Character extends MovableObject {
         this.animations = new CharacterAnimations(this);
         this.state = new CharacterState(this);
         this.movement = new CharacterMovement(this);
-        
-        // Initialize animations
-        this.animations.animateJump();
     };
+
+    /**
+     * Initialize character managers when world is ready
+     */
+    initializeManagers() {
+        this.animations.initializeAnimations();
+        this.movement.initializeMovement();
+        this.animations.animateJump();
+    }
 
     /**
      * Offset values for collision detection

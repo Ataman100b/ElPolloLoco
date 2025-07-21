@@ -13,6 +13,13 @@ class CharacterMovement {
      */
     constructor(character) {
         this.character = character;
+        // Don't start movement immediately, wait for world to be set
+    }
+
+    /**
+     * Initializes movement when world is ready
+     */
+    initializeMovement() {
         this.setupMovement();
     }
 
@@ -28,6 +35,8 @@ class CharacterMovement {
      * Handles character movement
      */
     movement() {
+        if (!this.character.world || !this.character.world.keyboard) return;
+        
         if (this.canMoveRight()) {
             this.moveRight();
         }
@@ -70,6 +79,7 @@ class CharacterMovement {
      * @returns {boolean}
      */
     canMoveRight() {
+        if (!this.character.world || !this.character.world.keyboard || !this.character.world.level) return false;
         return this.character.world.keyboard.RIGHT && 
                this.character.x < this.character.world.level.level_end_x;
     }
@@ -79,6 +89,7 @@ class CharacterMovement {
      * @returns {boolean}
      */
     canMoveLeft() {
+        if (!this.character.world || !this.character.world.keyboard) return false;
         return this.character.world.keyboard.LEFT && this.character.x > 0;
     }
 

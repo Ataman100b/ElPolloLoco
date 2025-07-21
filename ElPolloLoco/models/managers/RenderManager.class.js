@@ -65,9 +65,11 @@ class RenderManager {
      * Draws the player character
      */
     drawCharacter() {
-        this.world.ctx.translate(this.world.camera_x, 0);
-        this.addTopMap(this.world.character);
-        this.world.ctx.translate(-this.world.camera_x, 0);
+        if (this.world.character) {
+            this.world.ctx.translate(this.world.camera_x, 0);
+            this.addTopMap(this.world.character);
+            this.world.ctx.translate(-this.world.camera_x, 0);
+        }
     }
 
     /**
@@ -85,6 +87,8 @@ class RenderManager {
      * @param {DrawableObjects} mo - The movable object to draw
      */
     addTopMap(mo) {
+        if (!mo) return;
+        
         if (mo.otherDirection) {
             this.flipImage(mo);
         }

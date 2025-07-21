@@ -164,8 +164,8 @@ class World {
      * Setup the game environment and start game loops
      */
     setupGameEnvironment() {
-        this.renderManager.draw();
         this.setWorld();
+        this.renderManager.draw();
         this.run();
         this.gameStateManager.checkForGameOver();
     }
@@ -185,6 +185,9 @@ class World {
     setWorld() {
         this.character.world = this;
         this.endboss.world = this;
+        
+        // Initialize character managers now that world is set
+        this.character.initializeManagers();
     }
 
     /**

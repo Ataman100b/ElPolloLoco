@@ -49,6 +49,13 @@ class CharacterAnimations {
      */
     constructor(character) {
         this.character = character;
+        // Don't start animations immediately, wait for world to be set
+    }
+
+    /**
+     * Initializes animations when world is ready
+     */
+    initializeAnimations() {
         this.setupAnimations();
     }
 
@@ -208,6 +215,7 @@ class CharacterAnimations {
      * @returns {boolean}
      */
     moveToSide() {
+        if (!this.character.world || !this.character.world.keyboard) return false;
         return this.character.world.keyboard.RIGHT || this.character.world.keyboard.LEFT;
     }
 
