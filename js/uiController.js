@@ -187,28 +187,7 @@ function showGame() {
   // CRITICAL FIX: Ensure the canvas is properly connected to the global window
   window.canvas = canvas;
   
-  // Test canvas rendering immediately with a pattern that won't interfere with game
-  if (canvas.getContext) {
-    const testCtx = canvas.getContext('2d');
-    // Draw a simple border test that won't interfere with game rendering
-    testCtx.strokeStyle = '#FF0000';
-    testCtx.lineWidth = 4;
-    testCtx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
-    testCtx.fillStyle = '#FFD700';
-    testCtx.font = '16px Arial';
-    testCtx.fillText('CANVAS ACTIVE - LOADING GAME...', 10, 25);
-    
-    console.log('🎨 Canvas border test drawn - Canvas is functional!');
-    
-    // Clear only the test elements after a shorter time
-    setTimeout(() => {
-      testCtx.clearRect(0, 0, canvas.width, canvas.height);
-      // Set sky blue background after clearing test
-      testCtx.fillStyle = '#87CEEB';
-      testCtx.fillRect(0, 0, canvas.width, canvas.height);
-      console.log('🧹 Test cleared, sky background set - Game should render now');
-    }, 1000);
-  }
+  console.log('✅ Canvas prepared for game rendering - ready for World initialization');
   
   startScreen.classList.add('d-none');
   gameNav.classList.remove('d-none');

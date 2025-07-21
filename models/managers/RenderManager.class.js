@@ -20,7 +20,11 @@ class RenderManager {
      * Clears the canvas and draws all game objects
      */
     draw() {
-        this.world.ctx.clearRect(0, 0, this.world.canvas.width, this.world.canvas.height);
+        // Fill with sky blue background first
+        this.world.ctx.fillStyle = '#87CEEB';
+        this.world.ctx.fillRect(0, 0, this.world.canvas.width, this.world.canvas.height);
+        
+        console.log('🎨 RenderManager.draw() called - Canvas size:', this.world.canvas.width, 'x', this.world.canvas.height);
         
         this.drawBackgroundElements();
         this.drawStatusBars();
