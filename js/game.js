@@ -155,6 +155,33 @@ function initializeGame() {
         window.debugGameFlow.log('showGame completed');
     }
     
+    // Preload all images before creating game objects
+    if (window.imagePreloader) {
+        console.log('🔄 Starting image preload process...');
+        
+        window.imagePreloader.preloadAllImages().then(() => {
+            console.log('✅ All images preloaded! Starting game...');
+            continueGameInitialization();
+        }).catch(error => {
+            console.error('❌ Image preload failed:', error);
+            // Continue anyway with traditional loading
+            console.log('⚠️ Continuing with traditional image loading...');
+            continueGameInitialization();
+        });
+    } else {
+        console.log('⚠️ Image preloader not available, using traditional loading');
+        continueGameInitialization();
+    }
+}
+
+/**
+ * Continues game initialization after image preloading
+ */
+function continueGameInitialization() {
+    if (window.debugGameFlow) {
+        window.debugGameFlow.log('continueGameInitialization called');
+    }
+    
     // Then initialize the game components
     initLevel();
     

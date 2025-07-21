@@ -49,8 +49,16 @@ class DrawableObjects {
      * @param {string} path - Path to the image file
      */
     loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
+        // Try to get preloaded image first
+        if (window.imagePreloader && window.imagePreloader.getImage(path)) {
+            this.img = window.imagePreloader.getImage(path);
+            console.log(`✅ Using preloaded image: ${path}`);
+        } else {
+            // Fallback to traditional loading
+            this.img = new Image();
+            this.img.src = path;
+            console.log(`⚠️ Loading image traditionally: ${path}`);
+        }
     }
 
     /**
