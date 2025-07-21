@@ -60,3 +60,37 @@ window.debugGameFlow = {
         }
     }
 };
+
+// Debug DOM structure
+window.debugDOM = function() {
+    console.log('=== DOM STRUCTURE DEBUG ===');
+    
+    // Check if canvas-cont exists
+    const canvasCont = document.getElementById('canvas-cont');
+    console.log('Canvas container exists:', !!canvasCont);
+    
+    if (canvasCont) {
+        console.log('Canvas container innerHTML length:', canvasCont.innerHTML.length);
+        console.log('Canvas container children:', canvasCont.children.length);
+        
+        // List all children
+        for (let i = 0; i < canvasCont.children.length; i++) {
+            const child = canvasCont.children[i];
+            console.log(`Child ${i}: ${child.tagName}, id="${child.id}", class="${child.className}"`);
+        }
+    }
+    
+    // Check body structure
+    console.log('Body innerHTML includes canvas tag:', document.body.innerHTML.includes('<canvas'));
+    
+    // Try different selectors
+    console.log('querySelector canvas:', document.querySelector('canvas'));
+    console.log('querySelector #canvas:', document.querySelector('#canvas'));
+    console.log('getElementsByTagName canvas:', document.getElementsByTagName('canvas'));
+};
+
+// Call debugDOM on page load
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('=== DOMContentLoaded Event ===');
+    window.debugDOM();
+});
