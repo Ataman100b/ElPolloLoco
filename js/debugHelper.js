@@ -22,7 +22,13 @@ window.addEventListener('load', () => {
     const firstScreen = document.getElementById('first-screen');
     const gameNav = document.getElementById('game-nav');
     
+    console.log('Canvas element:', canvas);
     console.log('Canvas exists:', !!canvas);
+    if (canvas) {
+        console.log('Canvas classes:', canvas.className);
+        console.log('Canvas display style:', window.getComputedStyle(canvas).display);
+        console.log('Canvas visible:', !canvas.classList.contains('d-none'));
+    }
     console.log('First screen exists:', !!firstScreen);
     console.log('Game nav exists:', !!gameNav);
 });
@@ -40,4 +46,17 @@ window.debugStartGame = function() {
     
     console.log('Debug: Canvas found, starting game...');
     startGameWithDelay();
+};
+
+// Add debug logging to track game initialization
+window.debugGameFlow = {
+    log: function(step, details) {
+        console.log(`[GAME FLOW] ${step}:`, details || '');
+        
+        // Also check canvas state during flow
+        const canvas = document.getElementById('canvas');
+        if (canvas) {
+            console.log(`[GAME FLOW] Canvas state - Classes: "${canvas.className}", Visible: ${!canvas.classList.contains('d-none')}`);
+        }
+    }
 };

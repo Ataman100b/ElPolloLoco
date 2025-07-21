@@ -21,12 +21,28 @@ let keyboard = new Keyboard();
  * @returns {boolean} True if initialization was successful
  */
 function init() {
+    if (window.debugGameFlow) {
+        window.debugGameFlow.log('init() called - looking for canvas');
+    }
+    
     canvas = document.getElementById('canvas');
     
     // Ensure canvas exists before creating world
     if (!canvas) {
         console.error('Canvas element not found!');
+        
+        // Extra debugging
+        const allCanvases = document.getElementsByTagName('canvas');
+        console.error('Total canvas elements in document:', allCanvases.length);
+        
+        const elementWithId = document.querySelector('#canvas');
+        console.error('Element with #canvas selector:', elementWithId);
+        
         return false;
+    }
+    
+    if (window.debugGameFlow) {
+        window.debugGameFlow.log('Canvas found, creating world');
     }
     
     world = new World(canvas, keyboard);
@@ -104,10 +120,21 @@ function setupKeyboardControls() {
  * This helps prevent initialization errors on slower connections like GitHub Pages
  */
 function startGameWithDelay() {
+    if (window.debugGameFlow) {
+        window.debugGameFlow.log('startGameWithDelay called');
+    }
+    
     // Use the domReady helper to ensure DOM is fully loaded
     ensureWindowLoaded(() => {
+        if (window.debugGameFlow) {
+            window.debugGameFlow.log('DOM ensured to be loaded');
+        }
+        
         // Additional delay for GitHub Pages to ensure all resources are ready
         setTimeout(() => {
+            if (window.debugGameFlow) {
+                window.debugGameFlow.log('Starting initializeGame after delay');
+            }
             initializeGame();
         }, 500);
     });
@@ -117,16 +144,36 @@ function startGameWithDelay() {
  * Initializes the game components
  */
 function initializeGame() {
+    if (window.debugGameFlow) {
+        window.debugGameFlow.log('initializeGame called');
+    }
+    
     // First show the game UI to make canvas visible
     showGame();
+    
+    if (window.debugGameFlow) {
+        window.debugGameFlow.log('showGame completed');
+    }
     
     // Then initialize the game components
     initLevel();
     
+    if (window.debugGameFlow) {
+        window.debugGameFlow.log('initLevel completed');
+    }
+    
     // Initialize the world with the now-visible canvas
     if (init()) {
+        if (window.debugGameFlow) {
+            window.debugGameFlow.log('init() successful');
+        }
+        
         // Complete the game start process
         completeGameStart();
+    } else {
+        if (window.debugGameFlow) {
+            window.debugGameFlow.log('init() failed!');
+        }
     }
 }
 
