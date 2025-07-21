@@ -58,7 +58,15 @@ class DrawableObjects {
      * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
      */
     draw(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        if (this.img && this.img.complete && this.img.naturalWidth > 0) {
+            ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        } else {
+            // Draw a placeholder while image loads
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.strokeStyle = '#FF0000';
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
     }
 
     /**

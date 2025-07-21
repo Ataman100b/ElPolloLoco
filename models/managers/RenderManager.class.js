@@ -24,7 +24,21 @@ class RenderManager {
         this.world.ctx.fillStyle = '#87CEEB';
         this.world.ctx.fillRect(0, 0, this.world.canvas.width, this.world.canvas.height);
         
-        console.log('🎨 RenderManager.draw() called - Canvas size:', this.world.canvas.width, 'x', this.world.canvas.height);
+        // Only log every 60 frames (1 second at 60fps) to reduce console spam
+        if (!this.frameCount) this.frameCount = 0;
+        this.frameCount++;
+        
+        if (this.frameCount % 60 === 0) {
+            console.log('🎨 RenderManager.draw() - Frame:', this.frameCount, 'Canvas size:', this.world.canvas.width, 'x', this.world.canvas.height);
+            console.log('📊 Game Objects Count:', {
+                backgroundObjects: this.world.level.backgroundObjects.length,
+                clouds: this.world.level.clouds.length,
+                enemies: this.world.level.enemies.length,
+                coins: this.world.level.coins.length,
+                bottles: this.world.level.bottles.length,
+                character: this.world.character ? 'exists' : 'missing'
+            });
+        }
         
         this.drawBackgroundElements();
         this.drawStatusBars();
