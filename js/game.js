@@ -25,7 +25,8 @@ function init() {
         window.debugGameFlow.log('init() called - looking for canvas');
     }
     
-    canvas = document.getElementById('canvas');
+    // First try to use the canvas created by showGame()
+    canvas = window.canvas || document.getElementById('canvas');
     
     // Ensure canvas exists before creating world
     if (!canvas) {
@@ -38,8 +39,13 @@ function init() {
         const elementWithId = document.querySelector('#canvas');
         console.error('Element with #canvas selector:', elementWithId);
         
+        console.log('🔍 Looking for window.canvas:', window.canvas);
+        console.log('🔍 Looking for window.visibleCanvas:', window.visibleCanvas);
+        
         return false;
     }
+    
+    console.log('✅ Canvas found for World creation:', canvas.width, 'x', canvas.height);
     
     if (window.debugGameFlow) {
         window.debugGameFlow.log('Canvas found, creating world');
