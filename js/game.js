@@ -18,6 +18,7 @@ let keyboard = new Keyboard();
 
 /**
  * Initializes the game by setting up the canvas and world
+ * @returns {boolean} True if initialization was successful
  */
 function init() {
     canvas = document.getElementById('canvas');
@@ -25,11 +26,12 @@ function init() {
     // Ensure canvas exists before creating world
     if (!canvas) {
         console.error('Canvas element not found!');
-        return;
+        return false;
     }
     
     world = new World(canvas, keyboard);
     responsiveControl();
+    return true;
 }
 
 /**
@@ -102,10 +104,41 @@ function setupKeyboardControls() {
  * This helps prevent initialization errors on slower connections like GitHub Pages
  */
 function startGameWithDelay() {
-    // Small delay to ensure DOM is ready
-    setTimeout(() => {
-        initLevel();
-        init();
-        startGame();
-    }, 100);
+    // Use the domReady helper to ensure DOM is fully loaded
+    ensureWindowLoaded(() => {
+        // Additional delay for GitHub Pages to ensure all resources are ready
+        setTimeout(() => {
+            initializeGame();
+        }, 500);
+    });
+}
+
+/**
+ * Initializes the game components
+ */
+function initializeGame() {
+    // First show the game UI to make canvas visible
+    showGame();
+    
+    // Then initialize the game components
+    initLevel();
+    
+    // Initialize the world with the now-visible canvas
+    if (init()) {
+        // Complete the game start process
+        completeGameStart();
+    }
+}
+
+/**
+ * Completes the game start process after initialization
+ */
+function completeGameStart() {
+    gameStarted = true;
+    window.gameStarted = true;
+    checkPlayMusic();
+    showResponsiveBtn();
+    if (fullscreenMode) {
+        showCanvasinFull();
+    }
 }

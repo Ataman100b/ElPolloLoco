@@ -35,16 +35,11 @@ document.addEventListener('fullscreenchange', fullscreenchanged);
 
 /**
  * Starts the game, shows the game UI, and initializes the game state
+ * Note: This is now called from game.js after proper initialization
  */
 function startGame() {
-  showGame();
-  gameStarted = true;
-  window.gameStarted = true;
-  checkPlayMusic();
-  showResponsiveBtn();
-  if (fullscreenMode) {
-    showCanvasinFull();
-  }
+  // This function is kept for backward compatibility
+  // The actual game start logic is handled in game.js
 }
 
 /**
@@ -65,9 +60,21 @@ function showGame() {
   let canvas = document.getElementById('canvas');
   let startScreen = document.getElementById('first-screen');
   let gameNav = document.getElementById('game-nav');
-  canvas.classList.remove('d-none');
-  startScreen.classList.add('d-none');
-  gameNav.classList.remove('d-none');
+  
+  // Check if elements exist before manipulating them
+  if (canvas) {
+    canvas.classList.remove('d-none');
+  } else {
+    console.error('Canvas element not found in showGame!');
+  }
+  
+  if (startScreen) {
+    startScreen.classList.add('d-none');
+  }
+  
+  if (gameNav) {
+    gameNav.classList.remove('d-none');
+  }
 }
 
 /**
@@ -332,9 +339,8 @@ function resetGameState() {
  * Initializes and starts a new game
  */
 function startNewGame() {
-  initLevel();
-  init();
-  startGame();
+  // Use the new initialization flow
+  startGameWithDelay();
 }
 
 /**
