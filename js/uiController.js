@@ -61,20 +61,158 @@ function showGame() {
   let startScreen = document.getElementById('first-screen');
   let gameNav = document.getElementById('game-nav');
   
-  // Check if elements exist before manipulating them
-  if (canvas) {
-    canvas.classList.remove('d-none');
+  console.log('🎨 showGame() - Elements check:', {
+    canvas: canvas ? '✅ found' : '❌ NOT FOUND',
+    startScreen: startScreen ? '✅ found' : '❌ NOT FOUND',
+    gameNav: gameNav ? '✅ found' : '❌ NOT FOUND'
+  });
+  
+  // Try alternative selectors if canvas not found by ID
+  if (!canvas) {
+    console.log('🔍 Canvas not found by ID, trying alternative selectors...');
+    canvas = document.querySelector('#canvas');
+    canvas = canvas || document.querySelector('canvas');
+    canvas = canvas || document.querySelector('.canvas-cont canvas');
+    
+    if (canvas) {
+      console.log('✅ Canvas found with alternative selector:', canvas.id, canvas.tagName);
+    }
+  }
+  
+  // Create canvas if it still doesn't exist
+  if (!canvas) {
+    console.log('🔧 Creating canvas element...');
+    canvas = document.createElement('canvas');
+    canvas.id = 'canvas';
+    canvas.width = 720;
+    canvas.height = 480;
+    
+    // Add canvas to a container
+    const canvasContainer = document.getElementById('canvas-cont');
+    if (canvasContainer) {
+      canvasContainer.appendChild(canvas);
+    } else {
+      document.body.appendChild(canvas);
+    }
+    console.log('✅ Canvas created and added to DOM');
   } else {
-    console.error('Canvas element not found in showGame!');
+    // Canvas exists, just make sure it's not hidden
+    canvas.classList.remove('d-none');
+    console.log('✅ Found existing canvas, removed d-none class');
   }
   
-  if (startScreen) {
-    startScreen.classList.add('d-none');
+  if (!startScreen || !gameNav) {
+    console.error('Required UI elements not found:', {canvas, startScreen, gameNav});
+    return;
   }
   
-  if (gameNav) {
-    gameNav.classList.remove('d-none');
+  // CLEAN CANVAS VISIBILITY SOLUTION
+  console.log('🎯 CLEAN CANVAS SOLUTION: Creating visible game area');
+  
+  // Remove any existing wrappers to prevent conflicts
+  const existingWrapper = document.getElementById('game-canvas-overlay');
+  if (existingWrapper) existingWrapper.remove();
+  
+  // Create a clean overlay for the game
+  const gameOverlay = document.createElement('div');
+  gameOverlay.id = 'game-canvas-overlay';
+  gameOverlay.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 720px;
+      height: 480px;
+      background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+      background-size: 400% 400%;
+      animation: gradientShift 3s ease infinite;
+      border-radius: 20px;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+    ">
+      <div id="canvas-container-overlay" style="
+        width: 714px;
+        height: 474px;
+        background: #87CEEB;
+        border-radius: 17px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      "></div>
+    </div>
+    <style>
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+    </style>
+  `;
+  
+  document.body.appendChild(gameOverlay);
+  
+  // Move canvas to the overlay container
+  const overlayContainer = document.getElementById('canvas-container-overlay');
+  if (canvas && overlayContainer) {
+    canvas.style.cssText = `
+      width: 100%;
+      height: 100%;
+      background: #87CEEB;
+      border-radius: 15px;
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    `;
+    overlayContainer.appendChild(canvas);
+    console.log('✅ Canvas moved to colorful overlay container');
+    
+    // Force canvas context refresh to ensure visibility
+    if (canvas.getContext) {
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      console.log('🎨 Canvas context configured for game rendering');
+    }
   }
+  
+  // Store references
+  window.visibleCanvas = canvas;
+  window.gameOverlay = gameOverlay;
+  
+  // CRITICAL FIX: Ensure the canvas is properly connected to the global window
+  window.canvas = canvas;
+  
+  // Test canvas rendering immediately with a pattern that won't interfere with game
+  if (canvas.getContext) {
+    const testCtx = canvas.getContext('2d');
+    // Draw a simple border test that won't interfere with game rendering
+    testCtx.strokeStyle = '#FF0000';
+    testCtx.lineWidth = 4;
+    testCtx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+    testCtx.fillStyle = '#FFD700';
+    testCtx.font = '16px Arial';
+    testCtx.fillText('CANVAS ACTIVE - LOADING GAME...', 10, 25);
+    
+    console.log('🎨 Canvas border test drawn - Canvas is functional!');
+    
+    // Clear only the test elements after a shorter time
+    setTimeout(() => {
+      testCtx.clearRect(0, 0, canvas.width, canvas.height);
+      // Set sky blue background after clearing test
+      testCtx.fillStyle = '#87CEEB';
+      testCtx.fillRect(0, 0, canvas.width, canvas.height);
+      console.log('🧹 Test cleared, sky background set - Game should render now');
+    }, 1000);
+  }
+  
+  startScreen.classList.add('d-none');
+  gameNav.classList.remove('d-none');
+  console.log('🎮 CLEAN solution applied - Game should be visible in colorful frame!');
 }
 
 /**
