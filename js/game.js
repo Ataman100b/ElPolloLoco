@@ -25,8 +25,8 @@ function init() {
         window.debugGameFlow.log('init() called - looking for canvas');
     }
     
-    // First try to use the canvas created by showGame()
-    canvas = window.canvas || document.getElementById('canvas');
+    // Priority order: originalCanvas -> window.canvas -> DOM canvas
+    canvas = window.originalCanvas || window.canvas || document.getElementById('canvas');
     
     // Ensure canvas exists before creating world
     if (!canvas) {
@@ -39,6 +39,7 @@ function init() {
         const elementWithId = document.querySelector('#canvas');
         console.error('Element with #canvas selector:', elementWithId);
         
+        console.log('🔍 Looking for window.originalCanvas:', window.originalCanvas);
         console.log('🔍 Looking for window.canvas:', window.canvas);
         console.log('🔍 Looking for window.visibleCanvas:', window.visibleCanvas);
         
@@ -46,6 +47,12 @@ function init() {
     }
     
     console.log('✅ Canvas found for World creation:', canvas.width, 'x', canvas.height);
+    console.log('🎯 Canvas source:', {
+        isOriginal: canvas === window.originalCanvas,
+        isWindow: canvas === window.canvas,
+        canvasId: canvas.id,
+        canvasClasses: canvas.className
+    });
     
     if (window.debugGameFlow) {
         window.debugGameFlow.log('Canvas found, creating world');
@@ -136,13 +143,13 @@ function startGameWithDelay() {
             window.debugGameFlow.log('DOM ensured to be loaded');
         }
         
-        // Additional delay for GitHub Pages to ensure all resources are ready
+        // Longer delay to give the original canvas time to appear
         setTimeout(() => {
             if (window.debugGameFlow) {
                 window.debugGameFlow.log('Starting initializeGame after delay');
             }
             initializeGame();
-        }, 500);
+        }, 1000); // Increased from 500ms to 1000ms
     });
 }
 
@@ -154,7 +161,33 @@ function initializeGame() {
         window.debugGameFlow.log('initializeGame called');
     }
     
-    // First show the game UI to make canvas visible
+    // Use Canvas Detective to find the original canvas first
+    if (window.canvasDetective) {
+        console.log('🕵️ Using Canvas Detective to find original canvas...');
+        
+        window.canvasDetective.findOriginalCanvas((foundCanvas) => {
+            if (foundCanvas) {
+                console.log('🎉 Canvas Detective found the original canvas!');
+                // Store the original canvas reference
+                window.originalCanvas = foundCanvas;
+            } else {
+                console.log('⚠️ Canvas Detective could not find original canvas');
+            }
+            
+            // Continue with showGame regardless
+            continueInitialization();
+        });
+    } else {
+        console.log('⚠️ Canvas Detective not available');
+        continueInitialization();
+    }
+}
+
+/**
+ * Continues initialization after canvas detection
+ */
+function continueInitialization() {
+    // Show the game UI to make canvas visible
     showGame();
     
     if (window.debugGameFlow) {
