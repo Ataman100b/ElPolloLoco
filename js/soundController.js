@@ -101,7 +101,14 @@ function toggleSoundState() {
  */
 function updateSoundUI(buttons) {
     if (playMusic) {
-        if (window.gameStarted) gameMusic.play();
+        if (window.gameStarted) {
+            // Safely attempt to play music
+            gameMusic.play().catch(error => {
+                if (error.name !== 'AbortError') {
+                    console.log('Music play failed:', error.name);
+                }
+            });
+        }
         unmuteIcon(buttons.mute, buttons.unmute, buttons.muteInGame, buttons.unmuteInGame);
     } else {
         gameMusic.pause();
@@ -149,7 +156,12 @@ function unmuteIcon(mute, unmute, muteInGame, unmuteInGame) {
  */
 function checkPlayMusic() {
     if (playMusic) {
-        gameMusic.play();
+        // Safely attempt to play music
+        gameMusic.play().catch(error => {
+            if (error.name !== 'AbortError') {
+                console.log('Music play failed:', error.name);
+            }
+        });
     }
 }
 
@@ -169,7 +181,12 @@ function stopMusic() {
  */
 function playSound(sound) {
     if (window.SOUNDS_ENABLED) {
-        sound.play();
+        // Safely attempt to play sound
+        sound.play().catch(error => {
+            if (error.name !== 'AbortError') {
+                console.log('Sound play failed:', error.name);
+            }
+        });
     }
 }
 

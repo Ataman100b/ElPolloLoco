@@ -17,6 +17,15 @@ let world;
 let keyboard = new Keyboard();
 
 /**
+ * Flag to prevent multiple game initializations
+ * @type {boolean}
+ */
+let gameInitialized = false;
+
+// Make the flag accessible globally for reset
+window.gameInitialized = gameInitialized;
+
+/**
  * Initializes the game by setting up the canvas and world
  * @returns {boolean} True if initialization was successful
  */
@@ -137,6 +146,12 @@ function startGameWithDelay() {
         window.debugGameFlow.log('startGameWithDelay called');
     }
     
+    // Prevent multiple initializations
+    if (gameInitialized) {
+        console.log('⚠️ Game already initialized, skipping...');
+        return;
+    }
+    
     // Use the domReady helper to ensure DOM is fully loaded
     ensureWindowLoaded(() => {
         if (window.debugGameFlow) {
@@ -160,6 +175,16 @@ function initializeGame() {
     if (window.debugGameFlow) {
         window.debugGameFlow.log('initializeGame called');
     }
+    
+    // Prevent multiple initializations
+    if (gameInitialized) {
+        console.log('⚠️ Game already initialized, skipping duplicate...');
+        return;
+    }
+    
+    // Mark as initialized early to prevent race conditions
+    gameInitialized = true;
+    window.gameInitialized = true;
     
     // Use Canvas Detective to find the original canvas first
     if (window.canvasDetective) {

@@ -406,7 +406,20 @@ function resetGameState() {
   window.gameStarted = false;
   clearAllIntervals();
   resetGameWorld();
+  resetGameInitialization();
   stopMusic();
+}
+
+/**
+ * Resets game initialization flag to allow restart
+ */
+function resetGameInitialization() {
+  if (typeof gameInitialized !== 'undefined') {
+    gameInitialized = false;
+  }
+  if (typeof window.gameInitialized !== 'undefined') {
+    window.gameInitialized = false;
+  }
 }
 
 /**
