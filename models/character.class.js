@@ -184,6 +184,8 @@ class Character extends MovableObject {
      * Initialize character managers when world is ready
      */
     initializeManagers() {
+        // Initialize state management intervals now that world is set
+        this.state.setupStateManagement();
         this.animations.initializeAnimations();
         this.movement.initializeMovement();
         this.animations.animateJump();

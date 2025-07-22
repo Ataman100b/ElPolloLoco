@@ -31,7 +31,7 @@ class CharacterState {
      */
     constructor(character) {
         this.character = character;
-        this.setupStateManagement();
+        // Don't setup intervals yet - wait for world to be initialized
     }
 
     /**
@@ -68,6 +68,11 @@ class CharacterState {
      * @returns {boolean}
      */
     noInteractions() {
+        // Check if world and keyboard exist before accessing
+        if (!this.character.world || !this.character.world.keyboard) {
+            return true;
+        }
+        
         return !this.character.world.keyboard.RIGHT &&
                !this.character.world.keyboard.LEFT && 
                !this.character.world.keyboard.UP &&
@@ -80,6 +85,11 @@ class CharacterState {
      * Checks and handles coin-bottle exchange
      */
     checkCoinBottleExchange() {
+        // Check if world and keyboard exist before accessing
+        if (!this.character.world || !this.character.world.keyboard) {
+            return;
+        }
+        
         if (!this.character.world.keyboard.B) {
             this.exchangeCoinBottleActive = false;
         }   
