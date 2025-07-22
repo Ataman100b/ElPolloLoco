@@ -122,15 +122,8 @@ function showGame() {
     
     console.log('✅ Canvas configured and stored globally');
     
-    // Test canvas immediately
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#FFD700';
-    ctx.fillRect(10, 10, 100, 50);
-    ctx.fillStyle = '#000';
-    ctx.font = '16px Arial';
-    ctx.fillText('CANVAS WORKS!', 15, 35);
-    
-    console.log('✅ Canvas test drawn - should be visible now!');
+    // Canvas is ready for game rendering (removed test drawing)
+    console.log('✅ Canvas ready for game - test drawing removed');
     
   } else {
     console.error('❌ CRITICAL: Could not create or find any canvas element!');
