@@ -13,6 +13,18 @@ class GameStateManager {
      * @type {boolean}
      */
     bottleNotificationShown = false;
+    
+    /**
+     * Game over check interval ID
+     * @type {number}
+     */
+    gameOverInterval = null;
+    
+    /**
+     * Flag to prevent multiple game over triggers
+     * @type {boolean}
+     */
+    gameEnded = false;
 
     /**
      * @param {World} world - Reference to the game world
@@ -25,17 +37,31 @@ class GameStateManager {
      * Checks if the game should end based on character or endboss state
      */
     checkForGameOver() {
-        setInterval(() => {
-            if (this.world.character.isDead()) {
-                setTimeout(() => {
-                    this.hideBottleNotificationAndShowGameOver('lost');
-                }, 1500);
-            } else if (this.world.endboss.isDead()) {
-                setTimeout(() => {
-                    this.hideBottleNotificationAndShowGameOver('win');
-                }, 1500);
-            }
-        }, 1000);
+        // Clear any existing interval first
+        if (this.gameOverInterval) {
+            clearInterval(this.gameOverInterval);
+        }
+        
+        // Only start if game hasn't ended yet
+        if (!this.gameEnded) {
+            this.gameOverInterval = setInterval(() => {
+                if (this.gameEnded) return; // Extra safety check
+                
+                if (this.world.character.isDead()) {
+                    this.gameEnded = true;
+                    clearInterval(this.gameOverInterval);
+                    setTimeout(() => {
+                        this.hideBottleNotificationAndShowGameOver('lost');
+                    }, 1500);
+                } else if (this.world.endboss.isDead()) {
+                    this.gameEnded = true;
+                    clearInterval(this.gameOverInterval);
+                    setTimeout(() => {
+                        this.hideBottleNotificationAndShowGameOver('win');
+                    }, 1500);
+                }
+            }, 1000);
+        }
     }
 
     /**
@@ -77,6 +103,20 @@ class GameStateManager {
         let win = document.getElementById('gameOverScreenWin');
         win.style.display = "flex";
         win.style.zIndex = "999";
+    }
+
+    /**
+     * Resets the game state manager for a new game
+     */
+    resetGameState() {
+        this.gameEnded = false;
+        this.bottleNotificationShown = false;
+        
+        // Clear any existing game over interval
+        if (this.gameOverInterval) {
+            clearInterval(this.gameOverInterval);
+            this.gameOverInterval = null;
+        }
     }
 
     /**

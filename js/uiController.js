@@ -339,6 +339,16 @@ function resetGameWorld() {
     resetCharacterState();
     resetStatusBars();
     clearWorldCanvas();
+    resetGameStateManager();
+  }
+}
+
+/**
+ * Resets the game state manager to prevent multiple intervals
+ */
+function resetGameStateManager() {
+  if (window.world.gameStateManager) {
+    window.world.gameStateManager.resetGameState();
   }
 }
 
