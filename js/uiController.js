@@ -112,7 +112,7 @@ function showGame() {
       margin: 20px auto !important;
       border-radius: 10px !important;
       position: relative !important;
-      z-index: 100 !important;
+      z-index: 10 !important;
     `;
     
     // Store reference globally
@@ -138,7 +138,7 @@ function showGame() {
   
   startScreen.classList.add('d-none');
   gameNav.classList.remove('d-none');
-  console.log('🎮 AGGRESSIVE CANVAS SOLUTION: Canvas should be visible with test drawing!');
+  console.log('🎮 Game UI shown - canvas ready for rendering');
 }
 
 /**
